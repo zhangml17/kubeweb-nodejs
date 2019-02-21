@@ -15,6 +15,8 @@ router.get('/', function(req, res, next) {
   res.render('install');
 });
 
+var result="等待安装结束...";
+var n=0;
 router.post('/',function(req,res){
 
     //获取参数值i
@@ -32,34 +34,41 @@ router.post('/',function(req,res){
       output: process.stdout  
     }); 
 
-    var result="阿瑟东撒的";
-    function schduleCronstyle(){
+
+  //  function schduleCronstyle(){
       // 每秒输出一下日期时间
       schdule.scheduleJob('* * * * * *',function(){
   
-           console.log('scheduleCronstyle:'+new Date());
+          // console.log('scheduleCronstyle:'+new Date());
           
           lineReader.eachLine(path,function(line,last){
               
              result = line;
-             console.log(result);
+         
+             n += 10;
+            //  var rs = result.includes('ERROR');
+            //  if(rs){
+            //    result="中国..."
+            //  }
+            // console.log(result);
           });
 
           function writeSome(){
               return new Date()+'\n';
           }
           
-          fs.appendFile(path,writeSome(),(err)=>{
+          // 追加文本
+          // fs.appendFile(path,writeSome(),(err)=>{
               
-          })
-
+          // })
+           fs.writeFile(path,writeSome(),(err)=>{})
       })
-  }
-  schduleCronstyle();
+ // }
+  //schduleCronstyle();
+
   res.render('afterinstall',{
-    data:result
+    data:result,
+    percent: n
   });
-
 })
-
 module.exports = router;
